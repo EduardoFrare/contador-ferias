@@ -227,22 +227,66 @@ function getRandomQuote() {
 // ==========================================================================
 // STICKY NOTES CRUD
 // ==========================================================================
-const API_URL = 'https://api.restful-api.dev/objects/ff8081819ff5b11001a008653f1428a0';
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQKbNkFXnGlr3e0qRv1cnQTPzETuAFcwBsLctfgZtQoXZnytmRf8iMbTxhHdyzArhr1TSha3pYFj65L/pub?output=csv';
+const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLScEMMqCwJ8HZvnQKZZyPAtaaGHOiLL6FlEQrH_FfDzfissD5g/formResponse';
 
 async function initNotes() {
   try {
-    const res = await fetch(API_URL);
-    if (!res.ok) throw new Error("API error");
-    const result = await res.json();
-    let notes = result.data?.notes;
-    if (!notes || notes.length === 0) {
+    // 1. Tenta baixar a planilha (com cache buster para evitar cache do navegador)
+    const timestamp = Date.now();
+    const res = await fetch(`${CSV_URL}&t=${timestamp}`);
+    if (!res.ok) throw new Error("Erro ao baixar CSV");
+    
+    const text = await res.text();
+    const rows = parseCSV(text);
+    
+    // As linhas vêm como: [Data/Hora, Autor, Texto]
+    // Ignoramos o cabeçalho (i=1 em diante)
+    let notes = [];
+    for (let i = 1; i < rows.length; i++) {
+      const row = rows[i];
+      if (row.length >= 3) {
+        notes.push({ id: i, author: row[1], text: row[2] });
+      }
+    }
+    
+    // Invertemos para os mais novos aparecerem primeiro
+    notes.reverse();
+
+    if (notes.length === 0) {
       notes = DEFAULT_NOTES;
     }
+    
     renderNotes(notes);
   } catch(e) {
-    console.error("Erro ao carregar recados da API, usando os padrões locais.", e);
+    console.error("Erro ao carregar recados da planilha, usando padrões.", e);
     renderNotes(DEFAULT_NOTES);
   }
+}
+
+// Pequeno parser de CSV para lidar com quebras de linha e aspas no Google Sheets
+function parseCSV(str) {
+  const result = [];
+  let row = [];
+  let col = "";
+  let inQuotes = false;
+  for (let i = 0; i < str.length; i++) {
+    const char = str[i];
+    if (inQuotes) {
+      if (char === '"') {
+        if (str[i + 1] === '"') { col += '"'; i++; }
+        else inQuotes = false;
+      } else col += char;
+    } else {
+      if (char === '"') inQuotes = true;
+      else if (char === ',') { row.push(col.trim()); col = ""; }
+      else if (char === '\n') { row.push(col.trim()); result.push(row); row = []; col = ""; }
+      else if (char !== '\r') col += char;
+    }
+  }
+  if (col !== "") row.push(col.trim());
+  if (row.length) result.push(row);
+  return result;
 }
 
 function renderNotes(notes) {
@@ -279,36 +323,48 @@ function initEventListeners() {
 
     if (!author || !text) return;
     
+    // UI Feedback & Optimistic Render (Mostra na tela instantaneamente)
     const newNote = { id: Date.now(), author, text };
-    
-    // UI Feedback
     const submitBtn = noteForm.querySelector('button');
     const oldText = submitBtn.textContent;
     submitBtn.textContent = 'Salvando...';
     submitBtn.disabled = true;
 
     try {
-      // 1. Busca as notas mais recentes
-      const res = await fetch(API_URL);
-      const result = await res.json();
-      let notes = result.data?.notes || [...DEFAULT_NOTES];
-      
-      // 2. Adiciona a nova nota no topo
-      notes.unshift(newNote);
-      
-      // 3. Salva de volta na API
-      await fetch(API_URL, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: 'contador-ferias-notes', data: { notes } })
+      // Cria a carga de dados simulando o formulário do Google
+      const formData = new URLSearchParams();
+      formData.append('entry.862057512', author);
+      formData.append('entry.179620545', text);
+
+      // Envia os dados para o Google Forms em modo silencioso (no-cors)
+      await fetch(FORM_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: formData.toString()
       });
       
-      renderNotes(notes);
+      // Limpa os campos
       noteAuthorInput.value = '';
       noteTextInput.value = '';
+      
+      // Mostrar na tela instantaneamente (Optimistic UI)
+      // Como a planilha do Google pode demorar até 1 minuto para atualizar o link CSV público,
+      // nós fingimos que já baixamos a planilha atualizada adicionando no topo:
+      const currentNotes = Array.from(notesGridEl.children).map(child => {
+         const authorEl = child.querySelector('.sticky-author').textContent.replace('- ', '');
+         const contentEl = child.querySelector('.sticky-content').textContent.replace(/(^"|"$)/g, '');
+         return { author: authorEl, text: contentEl };
+      });
+      // Filtra o DEFAULT_NOTES e os recados, pega os recados da tela
+      currentNotes.unshift(newNote);
+      renderNotes(currentNotes);
+
     } catch(e) {
       console.error(e);
-      alert("Houve um erro ao salvar o recado para todos. Tente novamente.");
+      alert("Houve um erro ao enviar para a planilha. Tente novamente.");
     } finally {
       submitBtn.textContent = oldText;
       submitBtn.disabled = false;

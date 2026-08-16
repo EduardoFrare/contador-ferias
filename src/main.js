@@ -227,10 +227,22 @@ function getRandomQuote() {
 // ==========================================================================
 // STICKY NOTES CRUD
 // ==========================================================================
-function initNotes() {
-  const savedNotes = localStorage.getItem('duduzinho_notes_v2');
-  let notes = savedNotes ? JSON.parse(savedNotes) : DEFAULT_NOTES;
-  renderNotes(notes);
+const API_URL = 'https://api.restful-api.dev/objects/ff8081819ff5b11001a008653f1428a0';
+
+async function initNotes() {
+  try {
+    const res = await fetch(API_URL);
+    if (!res.ok) throw new Error("API error");
+    const result = await res.json();
+    let notes = result.data?.notes;
+    if (!notes || notes.length === 0) {
+      notes = DEFAULT_NOTES;
+    }
+    renderNotes(notes);
+  } catch(e) {
+    console.error("Erro ao carregar recados da API, usando os padrões locais.", e);
+    renderNotes(DEFAULT_NOTES);
+  }
 }
 
 function renderNotes(notes) {
@@ -260,22 +272,47 @@ function initEventListeners() {
   newAdviceBtn.addEventListener('click', getRandomQuote);
 
   // Sticky Notes submit
-  noteForm.addEventListener('submit', (e) => {
+  noteForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const author = noteAuthorInput.value.trim();
     const text = noteTextInput.value.trim();
 
     if (!author || !text) return;
-
-    const savedNotes = localStorage.getItem('duduzinho_notes_v2');
-    let notes = savedNotes ? JSON.parse(savedNotes) : [...DEFAULT_NOTES];
-
-    notes.unshift({ id: Date.now(), author, text });
-    localStorage.setItem('duduzinho_notes_v2', JSON.stringify(notes));
     
-    renderNotes(notes);
-    noteAuthorInput.value = '';
-    noteTextInput.value = '';
+    const newNote = { id: Date.now(), author, text };
+    
+    // UI Feedback
+    const submitBtn = noteForm.querySelector('button');
+    const oldText = submitBtn.textContent;
+    submitBtn.textContent = 'Salvando...';
+    submitBtn.disabled = true;
+
+    try {
+      // 1. Busca as notas mais recentes
+      const res = await fetch(API_URL);
+      const result = await res.json();
+      let notes = result.data?.notes || [...DEFAULT_NOTES];
+      
+      // 2. Adiciona a nova nota no topo
+      notes.unshift(newNote);
+      
+      // 3. Salva de volta na API
+      await fetch(API_URL, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: 'contador-ferias-notes', data: { notes } })
+      });
+      
+      renderNotes(notes);
+      noteAuthorInput.value = '';
+      noteTextInput.value = '';
+    } catch(e) {
+      console.error(e);
+      alert("Houve um erro ao salvar o recado para todos. Tente novamente.");
+    } finally {
+      submitBtn.textContent = oldText;
+      submitBtn.disabled = false;
+    }
   });
 
   // Panic Button (Mode Excel)

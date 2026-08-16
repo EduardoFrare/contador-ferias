@@ -28,9 +28,6 @@
         <span class="brand-name">FÉRIAS DO DUDUZINHO</span>
       </div>
       <div class="nav-actions">
-        <button id="configBtn" class="btn-secondary" title="Ajustar Data de Retorno">
-          ⚙️ Ajustar Data
-        </button>
         <button id="panicBtn" class="btn-panic">
           🚨 MODO PÂNICO (ALGUÉM OLHANDO)
         </button>
@@ -151,13 +148,13 @@
           </div>
         </div>
 
-        <!-- CARD 3: REUNIÕES EVITADAS -->
+        <!-- CARD 3: CHAMADOS ACUMULADOS -->
         <div class="dash-card">
-          <div class="dash-icon">🗣️</div>
+          <div class="dash-icon">🎟️</div>
           <div class="dash-info">
-            <h3>Reuniões "Aguardando Duduzinho"</h3>
+            <h3>Chamados "Aguardando Duduzinho"</h3>
             <div class="dash-value" id="meetingsCounter">28</div>
-            <p class="dash-desc">Alinhamentos adiados com sucesso</p>
+            <p class="dash-desc">Tickets adiados com sucesso</p>
           </div>
         </div>
 
@@ -184,8 +181,8 @@
         </div>
 
         <form id="noteForm" class="note-form">
-          <input type="text" id="noteAuthor" placeholder="Seu Nome (ex: Dev Desesperado)" required />
-          <input type="text" id="noteText" placeholder="Recado (ex: Trouxe alfajor? O banco de dados tá chiando...)" required />
+          <input type="text" id="noteAuthor" placeholder="Seu Nome (ex: Suporte Desesperado)" required />
+          <input type="text" id="noteText" placeholder="Recado (ex: Cliente VIP tá ligando...)" required />
           <button type="submit" class="btn-primary">Enviar Recado 🚀</button>
         </form>
 
@@ -196,10 +193,8 @@
 
     </main>
 
-    <!-- FOOTER -->
     <footer class="app-footer">
       <p>Desenvolvido com ❤️ e desespero para apoiar o time na ausência de <strong>Duduzinho</strong>.</p>
-      <p class="sub-foot">Pronto para hospedar na Vercel 🚀</p>
     </footer>
 
   </div>
@@ -309,25 +304,6 @@
       <span class="tab">Orçamento 2026</span>
       <span class="tab">Metas Globais</span>
       <span class="tab-add">+</span>
-    </div>
-  </div>
-
-  <!-- CONFIG MODAL -->
-  <div id="configModal" class="modal-backdrop hidden">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3>⚙️ Configurar Data de Retorno</h3>
-        <button id="closeConfigBtn" class="modal-close">✕</button>
-      </div>
-      <div class="modal-body">
-        <label for="inputTargetDate">Data e Hora de Volta do Duduzinho:</label>
-        <input type="datetime-local" id="inputTargetDate" class="modal-input" />
-        <p class="modal-hint">A data padrão está configurada para <strong>02/09/2026 às 14:00</strong> (17 dias de férias a partir de hoje às 23:00).</p>
-      </div>
-      <div class="modal-footer">
-        <button id="resetDateBtn" class="btn-secondary">Restaurar Padrão</button>
-        <button id="saveDateBtn" class="btn-primary">Salvar Alterações</button>
-      </div>
     </div>
   </div>
 

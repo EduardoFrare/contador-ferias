@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Operação Sobrevivência: Volta do Duduzinho 🏖️➡️💼</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Plus+Jakarta+Sans:wght@400;600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+
+  <!-- APP CONTAINER -->
+  <div id="app" class="app-wrapper">
+    
+    <!-- BACKGROUND DECORATIONS -->
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+    <div class="bg-blob blob-3"></div>
+    <div class="grid-overlay"></div>
+
+    <!-- NAVBAR / HEADER -->
+    <header class="top-nav">
+      <div class="brand">
+        <span class="emoji-badge">🍹</span>
+        <span class="brand-name">FÉRIAS DO DUDUZINHO</span>
+      </div>
+      <div class="nav-actions">
+        <button id="configBtn" class="btn-secondary" title="Ajustar Data de Retorno">
+          ⚙️ Ajustar Data
+        </button>
+        <button id="panicBtn" class="btn-panic">
+          🚨 MODO PÂNICO (ALGUÉM OLHANDO)
+        </button>
+      </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <main class="main-content">
+      
+      <section class="hero-section">
+        <div class="status-pill">
+          <span class="pulse-dot"></span>
+          <span id="statusText">DUDUZINHO MODO: 🏖️ Praia, Sol & Zero Slack</span>
+        </div>
+
+        <h1 class="hero-title">
+          OPERAÇÃO SOBREVIVÊNCIA <br />
+          <span class="gradient-text">VOLTA DO DUDUZINHO</span>
+        </h1>
+
+        <p class="hero-subtitle" id="funnySubtitle">
+          "Aguentem firmes, guerreiros! O homem voltará para colocar ordem na casa."
+        </p>
+
+        <!-- TARGET DATE BANNER -->
+        <div class="target-date-card">
+          <div class="target-item">
+            <span class="target-label">INÍCIO DAS FÉRIAS</span>
+            <span class="target-value">Hoje às 23:00</span>
+          </div>
+          <div class="target-divider">⏳ 17 DIAS DE DESCANSO ⏳</div>
+          <div class="target-item">
+            <span class="target-label">RETORNO TRIUNFAL</span>
+            <span class="target-value" id="displayTargetDate">02/09/2026 às 14:00</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- COUNTDOWN DISPLAY -->
+      <section class="countdown-section">
+        <div class="countdown-grid">
+          
+          <div class="time-card">
+            <div class="time-box">
+              <span class="time-number" id="days">17</span>
+            </div>
+            <span class="time-label">DIAS</span>
+          </div>
+
+          <div class="time-colon">:</div>
+
+          <div class="time-card">
+            <div class="time-box">
+              <span class="time-number" id="hours">00</span>
+            </div>
+            <span class="time-label">HORAS</span>
+          </div>
+
+          <div class="time-colon">:</div>
+
+          <div class="time-card">
+            <div class="time-box">
+              <span class="time-number" id="minutes">00</span>
+            </div>
+            <span class="time-label">MINUTOS</span>
+          </div>
+
+          <div class="time-colon">:</div>
+
+          <div class="time-card highlight-sec">
+            <div class="time-box">
+              <span class="time-number" id="seconds">00</span>
+            </div>
+            <span class="time-label">SEGUNDOS</span>
+          </div>
+
+        </div>
+
+        <!-- PROGRESS BAR -->
+        <div class="vacation-progress-container">
+          <div class="progress-info">
+            <span>Progresso das Férias do Duduzinho</span>
+            <span id="progressPercent">0%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressFill"></div>
+          </div>
+          <div class="progress-foot">
+            <span>🍹 Descansando...</span>
+            <span>💼 Volta ao Trabalho!</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- SURVIVAL DASHBOARD / METRICS -->
+      <section class="dashboard-grid">
+        
+        <!-- CARD 1: CAFÉ METER -->
+        <div class="dash-card">
+          <div class="dash-icon">☕</div>
+          <div class="dash-info">
+            <h3>Xícaras de Café Consumidas pelo Time</h3>
+            <div class="dash-value" id="coffeeCounter">142</div>
+            <p class="dash-desc">Estimativa de cafeína pura para não surtar</p>
+          </div>
+        </div>
+
+        <!-- CARD 2: BATERIA DO TIME -->
+        <div class="dash-card">
+          <div class="dash-icon">🔋</div>
+          <div class="dash-info">
+            <h3>Bateria Emocional da Equipe</h3>
+            <div class="dash-value" id="batteryPercent">34%</div>
+            <div class="mini-bar">
+              <div class="mini-bar-fill" id="batteryFill" style="width: 34%;"></div>
+            </div>
+            <p class="dash-desc" id="batteryStatus">"Sobrevivendo à base de fé e memes"</p>
+          </div>
+        </div>
+
+        <!-- CARD 3: REUNIÕES EVITADAS -->
+        <div class="dash-card">
+          <div class="dash-icon">🗣️</div>
+          <div class="dash-info">
+            <h3>Reuniões "Aguardando Duduzinho"</h3>
+            <div class="dash-value" id="meetingsCounter">28</div>
+            <p class="dash-desc">Alinhamentos adiados com sucesso</p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- FUNNY ADVICE GENERATOR -->
+      <section class="advice-section">
+        <div class="advice-card">
+          <div class="advice-header">
+            <span class="badge">💡 CONSELHO DO DIA PARA O TIME</span>
+            <button id="newAdviceBtn" class="btn-sm">🎲 Novo Conselho</button>
+          </div>
+          <blockquote class="advice-quote" id="adviceQuote">
+            "Se o servidor cair ou o sistema der erro, responda no grupo: 'Excelente ponto, vou validar isso assim que o Duduzinho voltar!'"
+          </blockquote>
+        </div>
+      </section>
+
+      <!-- STICKY NOTES / RECADOS PARA O DUDUZINHO -->
+      <section class="notes-section">
+        <div class="notes-header">
+          <h2>📌 Mural de Recados para a Volta do Duduzinho</h2>
+          <p>Deixe um aviso ou pedido de socorro para quando ele abrir o site!</p>
+        </div>
+
+        <form id="noteForm" class="note-form">
+          <input type="text" id="noteAuthor" placeholder="Seu Nome (ex: Dev Desesperado)" required />
+          <input type="text" id="noteText" placeholder="Recado (ex: Trouxe alfajor? O banco de dados tá chiando...)" required />
+          <button type="submit" class="btn-primary">Enviar Recado 🚀</button>
+        </form>
+
+        <div class="notes-grid" id="notesGrid">
+          <!-- Dynamically inserted sticky notes -->
+        </div>
+      </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="app-footer">
+      <p>Desenvolvido com ❤️ e desespero para apoiar o time na ausência de <strong>Duduzinho</strong>.</p>
+      <p class="sub-foot">Pronto para hospedar na Vercel 🚀</p>
+    </footer>
+
+  </div>
+
+  <!-- FAKE EXCEL OVERLAY (MODO PÂNICO) -->
+  <div id="excelOverlay" class="excel-overlay hidden">
+    <div class="excel-header">
+      <div class="excel-title-bar">
+        <span class="excel-icon">📊</span>
+        <span>Microsoft Excel - Planejamento_Estrategico_Q3_REVISION_FINAL_V2.xlsx</span>
+      </div>
+      <button id="closeExcelBtn" class="excel-close-btn" title="Fechar Modo Pânico (Voltar ao Cronômetro)">
+        ✖ Sair do Modo Pânico (ESC)
+      </button>
+    </div>
+    
+    <div class="excel-ribbon">
+      <span>Arquivo</span>
+      <span class="active">Página Inicial</span>
+      <span>Inserir</span>
+      <span>Layout da Página</span>
+      <span>Fórmulas</span>
+      <span>Dados</span>
+      <span>Revisão</span>
+      <span>Exibir</span>
+    </div>
+
+    <div class="excel-formula-bar">
+      <span class="cell-id">fx</span>
+      <input type="text" value="=SOMA(B2:B45)*PROCV(C2; Tabela_Metas; 2; FALSO) + 'PROJEÇÃO DE VENDAS'!" readonly />
+    </div>
+
+    <div class="excel-sheet-wrapper">
+      <table class="excel-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+            <th>E</th>
+            <th>F</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-num">1</td>
+            <td class="excel-bold">METRICA CORPORATIVA Q3</td>
+            <td class="excel-bold">PROJEÇÃO (R$)</td>
+            <td class="excel-bold">REALIZADO</td>
+            <td class="excel-bold">VARIÂNCIA</td>
+            <td class="excel-bold">RESPONSÁVEL</td>
+            <td class="excel-bold">STATUS</td>
+          </tr>
+          <tr>
+            <td class="row-num">2</td>
+            <td>Relatório de Entregáveis</td>
+            <td>R$ 450.000,00</td>
+            <td>R$ 485.200,00</td>
+            <td class="green">+7.8%</td>
+            <td>Duduzinho (Em Férias)</td>
+            <td><span class="status-tag green">CONCLUÍDO</span></td>
+          </tr>
+          <tr>
+            <td class="row-num">3</td>
+            <td>Refatoração de Infraestrutura</td>
+            <td>R$ 120.000,00</td>
+            <td>R$ 115.000,00</td>
+            <td class="green">-4.1%</td>
+            <td>Equipe de TI</td>
+            <td><span class="status-tag yellow">EM ANDAMENTO</span></td>
+          </tr>
+          <tr>
+            <td class="row-num">4</td>
+            <td>Café Consumido na Espera</td>
+            <td>850 L</td>
+            <td>1.420 L</td>
+            <td class="red">+67.0%</td>
+            <td>Time Desesperado</td>
+            <td><span class="status-tag red">CRÍTICO</span></td>
+          </tr>
+          <tr>
+            <td class="row-num">5</td>
+            <td>Respostas 'Vou ver com Duduzinho'</td>
+            <td>50 unidades</td>
+            <td>340 unidades</td>
+            <td class="red">+580%</td>
+            <td>Atendimento</td>
+            <td><span class="status-tag green">EFICIENTE</span></td>
+          </tr>
+          <tr>
+            <td class="row-num">6</td>
+            <td>Retorno das Férias</td>
+            <td>02/09/2026 14:00</td>
+            <td>AGUARDANDO</td>
+            <td>17 Dias</td>
+            <td>Duduzinho</td>
+            <td><span class="status-tag blue">AGENDADO</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="excel-tabs">
+      <span class="tab active">Plan1 (KPIs)</span>
+      <span class="tab">Orçamento 2026</span>
+      <span class="tab">Metas Globais</span>
+      <span class="tab-add">+</span>
+    </div>
+  </div>
+
+  <!-- CONFIG MODAL -->
+  <div id="configModal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>⚙️ Configurar Data de Retorno</h3>
+        <button id="closeConfigBtn" class="modal-close">✕</button>
+      </div>
+      <div class="modal-body">
+        <label for="inputTargetDate">Data e Hora de Volta do Duduzinho:</label>
+        <input type="datetime-local" id="inputTargetDate" class="modal-input" />
+        <p class="modal-hint">A data padrão está configurada para <strong>02/09/2026 às 14:00</strong> (17 dias de férias a partir de hoje às 23:00).</p>
+      </div>
+      <div class="modal-footer">
+        <button id="resetDateBtn" class="btn-secondary">Restaurar Padrão</button>
+        <button id="saveDateBtn" class="btn-primary">Salvar Alterações</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
